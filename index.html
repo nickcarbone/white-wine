@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The White Wine Field Guide</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Special+Elite&family=Courier+Prime:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+:root{
+  --bg:#0C0B09;--bg-card:#151310;--bg-alt:#1A1816;
+  --gold:#C8A84B;--gold-dim:#6A5820;
+  --sage:#5B8C6C;--sage-dim:#3A6048;
+  --cream:#EDE8DA;--muted:#9A9080;
+  --border:#252220;--border-lt:#2F2C28;
+}
+body{background:var(--bg);color:var(--cream);font-family:'Courier Prime',monospace;font-size:15px;line-height:1.75;}
+/* NAV */
+nav{position:sticky;top:0;z-index:100;background:rgba(12,11,9,.96);border-bottom:1px solid var(--border);padding:0 2rem;backdrop-filter:blur(8px);}
+.nav-inner{max-width:1200px;margin:0 auto;display:flex;align-items:center;gap:1.75rem;height:50px;overflow-x:auto;}
+.nav-logo{font-family:'Bebas Neue',sans-serif;font-size:17px;color:var(--gold);letter-spacing:.06em;margin-right:auto;flex-shrink:0;}
+nav a{color:var(--muted);text-decoration:none;font-family:'Special Elite',cursive;font-size:10px;letter-spacing:.15em;text-transform:uppercase;white-space:nowrap;transition:color .2s;}
+nav a:hover{color:var(--gold);}
+/* HERO */
+.hero{padding:80px 2rem 60px;max-width:1200px;margin:0 auto;border-bottom:1px solid var(--border);}
+.kicker{font-family:'Special Elite',cursive;font-size:10px;letter-spacing:.22em;color:var(--gold);text-transform:uppercase;margin-bottom:1rem;}
+.hero h1{font-family:'Bebas Neue',sans-serif;font-size:clamp(60px,10vw,112px);line-height:.9;letter-spacing:.02em;margin-bottom:1.5rem;}
+.hero h1 em{color:var(--gold);font-style:normal;}
+.hero-intro{max-width:680px;font-size:15px;color:var(--muted);line-height:1.85;margin-bottom:1.75rem;}
+.hero-intro strong{color:var(--cream);}
+.cliff{background:var(--bg-card);border-left:3px solid var(--gold);padding:1.5rem 2rem;max-width:680px;}
+.cliff-label{font-family:'Special Elite',cursive;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;}
+.cliff p{font-size:13px;color:var(--muted);line-height:1.8;}
+/* SECTIONS */
+.wrap{max-width:1200px;margin:0 auto;padding:60px 2rem;border-bottom:1px solid var(--border);}
+.sec-kicker{font-family:'Special Elite',cursive;font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.4rem;}
+.sec-title{font-family:'Bebas Neue',sans-serif;font-size:clamp(34px,5vw,54px);letter-spacing:.03em;color:var(--cream);line-height:1;}
+.sec-sub{font-size:13px;color:var(--muted);margin-top:.75rem;max-width:600px;line-height:1.75;}
+.sec-head{margin-bottom:40px;}
+/* GLOSSARY */
+.glos-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);}
+.glos-card{background:var(--bg-card);padding:1.5rem;}
+.glos-term{font-family:'Bebas Neue',sans-serif;font-size:24px;letter-spacing:.06em;color:var(--gold);margin-bottom:.5rem;}
+.glos-def{font-size:13px;color:var(--muted);line-height:1.75;}
+.glos-def em{color:var(--cream);font-style:normal;}
+/* FLAVOR MAP */
+.map-wrap{background:var(--bg-card);border:1px solid var(--border);padding:1rem 1rem .5rem;}
+.map-wrap svg{width:100%;height:auto;}
+.map-legend{display:flex;gap:2rem;padding:.75rem .5rem;justify-content:center;flex-wrap:wrap;}
+.leg-item{display:flex;align-items:center;gap:.5rem;font-family:'Special Elite',cursive;font-size:10px;letter-spacing:.1em;color:var(--muted);}
+.leg-dot{width:9px;height:9px;border-radius:50%;}
+/* VARIETAL CARDS */
+.vcard{background:var(--bg-card);border:1px solid var(--border);margin-top:1px;}
+.vhead{padding:1.25rem 2rem;border-bottom:1px solid var(--border);display:flex;align-items:baseline;gap:1rem;flex-wrap:wrap;}
+.badge{font-family:'Special Elite',cursive;font-size:9px;letter-spacing:.15em;text-transform:uppercase;padding:2px 7px;border:1px solid;flex-shrink:0;}
+.badge.std{color:var(--gold);border-color:var(--gold-dim);}
+.badge.nic{color:var(--sage);border-color:var(--sage-dim);}
+.vname{font-family:'Bebas Neue',sans-serif;font-size:clamp(26px,4vw,40px);letter-spacing:.04em;color:var(--cream);line-height:1;}
+.vtag{font-family:'Special Elite',cursive;font-size:11px;color:var(--muted);font-style:italic;margin-left:auto;}
+.vbody{display:grid;grid-template-columns:240px 1fr;}
+.vprofile{padding:1.5rem;border-right:1px solid var(--border);background:var(--bg-alt);}
+.vcontent{padding:1.5rem 2rem;display:grid;grid-template-columns:1fr 1fr;gap:1.25rem 2rem;}
+/* Profile bars */
+.pbar{margin-bottom:1rem;}
+.pbhead{display:flex;justify-content:space-between;margin-bottom:5px;}
+.pblabel,.pbval{font-family:'Special Elite',cursive;font-size:9px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);}
+.pbtrack{height:2px;background:var(--border-lt);}
+.pbfill{height:100%;}
+.pbfill.ac{background:var(--gold);}
+.pbfill.bd{background:var(--sage);}
+.pbfill.sw{background:#8C5A9E;}
+/* Tags */
+.tags{display:flex;flex-wrap:wrap;gap:5px;margin-top:1rem;}
+.tag{font-family:'Courier Prime',monospace;font-size:10px;color:var(--muted);background:var(--bg);border:1px solid var(--border-lt);padding:2px 7px;}
+/* Content */
+.vwhat,.vnote{grid-column:span 2;}
+.vcontent h4{font-family:'Special Elite',cursive;font-size:9px;letter-spacing:.22em;text-transform:uppercase;color:var(--gold);margin-bottom:.5rem;}
+.vcontent p{font-size:13px;color:var(--muted);line-height:1.75;}
+.vnote p{border-left:2px solid var(--gold-dim);padding-left:1rem;font-style:italic;}
+/* Bottles */
+.bentry{display:grid;grid-template-columns:1fr auto;align-items:baseline;gap:.5rem;border-bottom:1px solid var(--border);padding:.3rem 0;font-size:13px;}
+.bname{color:var(--cream);}
+.bsub{color:var(--muted);font-size:11px;}
+.bprice{color:var(--gold);font-family:'Bebas Neue',sans-serif;font-size:18px;letter-spacing:.05em;white-space:nowrap;}
+/* PRICE TIERS */
+.tier-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;background:var(--border);border:1px solid var(--border);}
+.tcard{background:var(--bg-card);padding:1.5rem;}
+.trange{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--gold);line-height:1;}
+.tlabel{font-family:'Special Elite',cursive;font-size:10px;letter-spacing:.14em;color:var(--muted);text-transform:uppercase;margin-bottom:1rem;padding-bottom:.75rem;border-bottom:1px solid var(--border);}
+.tdesc{font-size:12px;color:var(--muted);line-height:1.75;margin-bottom:1rem;}
+.tex{list-style:none;}
+.tex li{font-size:12px;color:var(--muted);padding:.3rem 0;border-bottom:1px solid var(--border);}
+.tex li:last-child{border-bottom:none;}
+.tex strong{color:var(--cream);}
+/* PAIRINGS */
+.pair-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);}
+.pcard{background:var(--bg-card);padding:1.5rem;}
+.pcat{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--cream);letter-spacing:.05em;margin-bottom:.75rem;padding-bottom:.75rem;border-bottom:1px solid var(--border);}
+.prow{display:flex;gap:.75rem;align-items:flex-start;border-bottom:1px solid var(--border);padding:.5rem 0;font-size:12px;}
+.prow:last-child{border-bottom:none;}
+.pwine{color:var(--gold);font-family:'Special Elite',cursive;font-size:9px;letter-spacing:.1em;white-space:nowrap;min-width:100px;padding-top:2px;}
+.pwhy{color:var(--muted);line-height:1.55;}
+/* STORE TIPS */
+.tips-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;background:var(--border);border:1px solid var(--border);}
+.tipcard{background:var(--bg-card);padding:1.5rem;}
+.tipnum{font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--border-lt);line-height:1;margin-bottom:-.25rem;}
+.tiptitle{font-family:'Bebas Neue',sans-serif;font-size:20px;color:var(--gold);letter-spacing:.04em;margin-bottom:.5rem;}
+.tipbody{font-size:13px;color:var(--muted);line-height:1.75;}
+/* FOOTER */
+footer{max-width:1200px;margin:0 auto;padding:2rem;text-align:center;font-family:'Special Elite',cursive;font-size:10px;letter-spacing:.2em;color:var(--muted);text-transform:uppercase;}
+@media(max-width:900px){
+  .vbody{grid-template-columns:1fr;}
+  .vprofile{border-right:none;border-bottom:1px solid var(--border);}
+  .vcontent{grid-template-columns:1fr;}
+  .vwhat,.vnote,.vregions,.vbottles,.vfood,.vsnacks{grid-column:span 1;}
+  .tier-grid{grid-template-columns:repeat(2,1fr);}
+  .vtag{display:none;}
+}
+@media(max-width:600px){
+  .hero,.wrap{padding:40px 1rem;}
+  nav{padding:0 1rem;}
+  .tier-grid{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="nav-inner">
+    <span class="nav-logo">WHITE WINE FIELD GUIDE</span>
+    <a href="#glossary">Terms</a>
+    <a href="#map">Flavor Map</a>
+    <a href="#standard">Standard</a>
+    <a href="#niche">Niche</a>
+    <a href="#prices">Prices</a>
+    <a href="#pairings">Pairings</a>
+    <a href="#store">At the Store</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="kicker">A Working Reference · Under $20 · Grocery &amp; Total Wine</div>
+  <h1>THE WHITE<br><em>WINE</em><br>FIELD GUIDE</h1>
+  <p class="hero-intro">White wine is not one thing. It is fourteen grapes, three continents, a century of regional argument, and a set of decisions that begin before you pick up a bottle. This guide covers the essential vocabulary, the full range from ubiquitous to obscure, and what to actually buy under $20 at grocery stores and Total Wine — with pairings that work in a real kitchen, not a Michelin dining room.<br><br><strong>You already know you hate oaky Chardonnay.</strong> That's the best possible start: it means you have a palate. You just haven't mapped it yet.</p>
+  <div class="cliff">
+    <div class="cliff-label">The Quality Cliff — Read This First</div>
+    <p>Under roughly $12, most white wine at American grocery stores is industrial commodity product — made at scale, engineered for inoffensive palatability, frequently sweetened, and aged on oak chips rather than actual barrels. It's drinkable, but optimized to taste like nothing in particular. Cross $12–$14 and genuine varietal character appears: real acidity, regional identity, winemaking decisions that make one bottle taste different from the next. Cross $18–$20 and you reach appellation-level wine, where a named subregion shows up in the glass. The sweet spot is $12–$18. Below $10 is commodity. Above $22, you're paying for terroir premium that requires a more practiced palate to appreciate.</p>
+  </div>
+</div>
+
+<!-- GLOSSARY -->
+<section class="wrap" id="glossary">
+  <div class="sec-head">
+    <div class="sec-kicker">Before You Pour</div>
+    <h2 class="sec-title">SIX TERMS THAT EXPLAIN EVERYTHING</h2>
+    <p class="sec-sub">These six concepts describe roughly 90% of what wine writers mean when they talk about white wine. Learn them once; use them forever.</p>
+  </div>
+  <div class="glos-grid">
+    <div class="glos-card">
+      <div class="glos-term">ACIDITY</div>
+      <p class="glos-def">The tartness or brightness in wine — think lemon juice versus flat water. High-acid wines make your mouth water. <em>This is the most important concept in food pairing: high-acid wine cuts through fat, oil, and salt.</em> Cool climates (New Zealand, Germany, northern France) produce higher-acid wines. Low-acid wines feel flat or "flabby."</p>
+    </div>
+    <div class="glos-card">
+      <div class="glos-term">BODY</div>
+      <p class="glos-def">How thick or full the wine feels in your mouth. Imagine skim milk (light-bodied) versus whole milk (full-bodied). <em>Body is driven mostly by alcohol content.</em> Higher-alcohol wines and hotter climates produce fuller-bodied wines. Light-bodied whites pair with delicate dishes; full-bodied ones hold up to richer food.</p>
+    </div>
+    <div class="glos-card">
+      <div class="glos-term">RESIDUAL SUGAR</div>
+      <p class="glos-def">Sugar remaining after fermentation. Dry = almost none (&lt;4g/L). Off-dry = detectable sweetness. Sweet = 40–120g/L. <em>Critical trap: aromatic wines like Riesling and Torrontés smell sweet but can be bone dry.</em> German labels tell you: "trocken" = dry. Without that word, assume some sweetness.</p>
+    </div>
+    <div class="glos-card">
+      <div class="glos-term">OAK</div>
+      <p class="glos-def">Flavor from barrel aging — vanilla, toast, coconut, butter, clove. Not inherently bad, but it overwhelms a wine's natural character when overdone. <em>What you hate about most grocery-store Chardonnay is heavy California oak.</em> Unoaked versions of the same grape taste crisper, more mineral, more alive.</p>
+    </div>
+    <div class="glos-card">
+      <div class="glos-term">MINERALITY</div>
+      <p class="glos-def">A real sensory quality — the flinty, chalky, or saline character in certain wines. Santorini Assyrtiko tastes of volcanic rock. Loire Muscadet tastes of wet chalk. Albariño has ocean-spray salinity. <em>Minerality comes from specific soils: limestone, slate, volcanic pumice.</em> It's terroir made literal — the ground in the glass.</p>
+    </div>
+    <div class="glos-card">
+      <div class="glos-term">TERROIR</div>
+      <p class="glos-def">French for "ground," but it means the full expression of place: soil type, climate, elevation, aspect toward the sun. <em>It's why Chardonnay from Burgundy tastes different from California Chardonnay grown from the same clone.</em> As you cross $18–20, you're increasingly paying for a specific valley or slope the winemaker is letting the land speak through.</p>
+    </div>
+  </div>
+</section>
+
+<!-- FLAVOR MAP -->
+<section class="wrap" id="map">
+  <div class="sec-head">
+    <div class="sec-kicker">Navigate the Landscape</div>
+    <h2 class="sec-title">THE FLAVOR MAP</h2>
+    <p class="sec-sub">Where each varietal lives on the two axes that matter most: acidity and body. Click any dot to jump to that varietal.</p>
+  </div>
+  <div class="map-wrap">
+    <svg viewBox="0 0 720 460" xmlns="http://www.w3.org/2000/svg">
+      <defs>
+        <style>
+          .ml{font-family:'Special Elite',cursive;font-size:9.5px;fill:#8A8070;letter-spacing:.06em;cursor:pointer;}
+          .ml:hover{fill:#C8A84B;}
+          .ma{font-family:'Special Elite',cursive;font-size:9px;fill:#4A4840;letter-spacing:.1em;}
+          .mz{font-family:'Special Elite',cursive;font-size:8px;fill:#353230;letter-spacing:.08em;}
+          .mdot{cursor:pointer;}
+          .mdot:hover{opacity:1!important;}
+        </style>
+      </defs>
+      <!-- Axes -->
+      <line x1="80" y1="30" x2="80" y2="420" stroke="#252220" stroke-width="1"/>
+      <line x1="80" y1="420" x2="680" y2="420" stroke="#252220" stroke-width="1"/>
+      <!-- Grid -->
+      <line x1="80" y1="30" x2="680" y2="30" stroke="#1C1A16" stroke-width="1" stroke-dasharray="4,8"/>
+      <line x1="80" y1="128" x2="680" y2="128" stroke="#1C1A16" stroke-width="1" stroke-dasharray="4,8"/>
+      <line x1="80" y1="225" x2="680" y2="225" stroke="#1C1A16" stroke-width="1" stroke-dasharray="4,8"/>
+      <line x1="80" y1="323" x2="680" y2="323" stroke="#1C1A16" stroke-width="1" stroke-dasharray="4,8"/>
+      <line x1="230" y1="30" x2="230" y2="420" stroke="#1C1A16" stroke-width="1" stroke-dasharray="4,8"/>
+      <line x1="380" y1="30" x2="380" y2="420" stroke="#1C1A16" stroke-width="1" stroke-dasharray="4,8"/>
+      <line x1="530" y1="30" x2="530" y2="420" stroke="#1C1A16" stroke-width="1" stroke-dasharray="4,8"/>
+      <!-- Axis labels -->
+      <text x="84" y="440" class="ma">LOW ACIDITY</text>
+      <text x="575" y="440" class="ma">HIGH ACIDITY</text>
+      <text x="18" y="260" class="ma" transform="rotate(-90,18,260)">LIGHT → FULL BODY</text>
+      <text x="90" y="52" class="mz">FULL · AROMATIC</text>
+      <text x="90" y="408" class="mz">LIGHT · NEUTRAL</text>
+      <text x="535" y="52" class="mz">STRUCTURED · INTENSE</text>
+      <text x="545" y="408" class="mz">LEAN · ELECTRIC</text>
+
+      <!-- STANDARD DOTS (gold) -->
+      <!-- Sauvignon Blanc: a=83,b=35 → x=578,y=283 -->
+      <circle class="mdot" cx="578" cy="283" r="7" fill="#C8A84B" opacity=".9" onclick="jumpTo('sauv-blanc')"/>
+      <text class="ml" x="586" y="279" onclick="jumpTo('sauv-blanc')">Sauvignon Blanc</text>
+      <!-- Pinot Grigio: a=54,b=26 → x=404,y=318 -->
+      <circle class="mdot" cx="404" cy="318" r="7" fill="#C8A84B" opacity=".9" onclick="jumpTo('pinot-grigio')"/>
+      <text class="ml" x="412" y="332" onclick="jumpTo('pinot-grigio')">Pinot Grigio</text>
+      <!-- Unoaked Chardonnay: a=52,b=58 → x=392,y=194 -->
+      <circle class="mdot" cx="392" cy="194" r="7" fill="#C8A84B" opacity=".9" onclick="jumpTo('chardonnay')"/>
+      <text class="ml" x="400" y="190" onclick="jumpTo('chardonnay')">Unoaked Chardonnay</text>
+      <!-- Riesling: a=90,b=28 → x=620,y=311 -->
+      <circle class="mdot" cx="620" cy="311" r="7" fill="#C8A84B" opacity=".9" onclick="jumpTo('riesling')"/>
+      <text class="ml" x="570" y="305" text-anchor="end" onclick="jumpTo('riesling')">Riesling</text>
+      <!-- Moscato: a=48,b=22 → x=368,y=334 SWEET ring -->
+      <circle cx="368" cy="334" r="14" fill="none" stroke="#8C5A9E" stroke-width="1" stroke-dasharray="3,4" opacity=".5"/>
+      <circle class="mdot" cx="368" cy="334" r="7" fill="#C8A84B" opacity=".9" onclick="jumpTo('moscato')"/>
+      <text class="ml" x="344" y="358" text-anchor="middle" onclick="jumpTo('moscato')">Moscato</text>
+      <text style="font-family:'Special Elite',cursive;font-size:8px;fill:#8C5A9E;letter-spacing:.1em;" x="344" y="369" text-anchor="middle">SWEET</text>
+
+      <!-- NICHE DOTS (sage) -->
+      <!-- Albariño: a=76,b=47 → x=536,y=237 -->
+      <circle class="mdot" cx="536" cy="237" r="7" fill="#5B8C6C" opacity=".9" onclick="jumpTo('albarino')"/>
+      <text class="ml" x="544" y="233" onclick="jumpTo('albarino')">Albariño</text>
+      <!-- Grüner Veltliner: a=72,b=40 → x=512,y=264 -->
+      <circle class="mdot" cx="512" cy="264" r="7" fill="#5B8C6C" opacity=".9" onclick="jumpTo('gruner')"/>
+      <text class="ml" x="462" y="260" text-anchor="end" onclick="jumpTo('gruner')">Grüner Veltliner</text>
+      <!-- Vermentino: a=69,b=50 → x=494,y=225 -->
+      <circle class="mdot" cx="494" cy="218" r="7" fill="#5B8C6C" opacity=".9" onclick="jumpTo('vermentino')"/>
+      <text class="ml" x="502" y="214" onclick="jumpTo('vermentino')">Vermentino</text>
+      <!-- Viognier: a=30,b=75 → x=260,y=128 -->
+      <circle class="mdot" cx="260" cy="128" r="7" fill="#5B8C6C" opacity=".9" onclick="jumpTo('viognier')"/>
+      <text class="ml" x="268" y="124" onclick="jumpTo('viognier')">Viognier</text>
+      <!-- Assyrtiko: a=87,b=55 → x=602,y=206 -->
+      <circle class="mdot" cx="602" cy="206" r="7" fill="#5B8C6C" opacity=".9" onclick="jumpTo('assyrtiko')"/>
+      <text class="ml" x="610" y="202" onclick="jumpTo('assyrtiko')">Assyrtiko</text>
+      <!-- Picpoul: a=88,b=20 → x=608,y=342 -->
+      <circle class="mdot" cx="608" cy="342" r="7" fill="#5B8C6C" opacity=".9" onclick="jumpTo('picpoul')"/>
+      <text class="ml" x="556" y="337" text-anchor="end" onclick="jumpTo('picpoul')">Picpoul</text>
+      <!-- Torrontés: a=62,b=36 → x=452,y=279 -->
+      <circle class="mdot" cx="452" cy="279" r="7" fill="#5B8C6C" opacity=".9" onclick="jumpTo('torrontes')"/>
+      <text class="ml" x="460" y="293" onclick="jumpTo('torrontes')">Torrontés</text>
+      <!-- Falanghina: a=65,b=52 → x=470,y=217 -->
+      <circle class="mdot" cx="470" cy="197" r="7" fill="#5B8C6C" opacity=".9" onclick="jumpTo('falanghina')"/>
+      <text class="ml" x="420" y="192" text-anchor="end" onclick="jumpTo('falanghina')">Falanghina</text>
+      <!-- Muscadet: a=78,b=20 → x=548,y=342 -->
+      <circle class="mdot" cx="548" cy="354" r="7" fill="#5B8C6C" opacity=".9" onclick="jumpTo('muscadet')"/>
+      <text class="ml" x="556" y="368" onclick="jumpTo('muscadet')">Muscadet</text>
+    </svg>
+  </div>
+  <div class="map-legend">
+    <div class="leg-item"><div class="leg-dot" style="background:var(--gold)"></div>Standard Varieties</div>
+    <div class="leg-item"><div class="leg-dot" style="background:var(--sage)"></div>Niche / Worth Discovering</div>
+    <div class="leg-item" style="color:#8C5A9E;">◯ Sweet style</div>
+  </div>
+</section>
+
+<!-- ════════ STANDARD VARIETALS ════════ -->
+<section class="wrap" id="standard">
+  <div class="sec-head">
+    <div class="sec-kicker">The Familiar Five</div>
+    <h2 class="sec-title">STANDARD VARIETALS</h2>
+    <p class="sec-sub">The wines you'll find in every grocery store. Worth understanding deeply — because each one contains more range than its reputation suggests.</p>
+  </div>
+
+  <!-- SAUVIGNON BLANC -->
+  <div class="vcard" id="sauv-blanc">
+    <div class="vhead">
+      <span class="badge std">Standard</span>
+      <h3 class="vname">SAUVIGNON BLANC</h3>
+      <span class="vtag">Sharp. Grassy. Your default white.</span>
+    </div>
+    <div class="vbody">
+      <div class="vprofile">
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Acidity</span><span class="pbval">High</span></div><div class="pbtrack"><div class="pbfill ac" style="width:85%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Body</span><span class="pbval">Light–Medium</span></div><div class="pbtrack"><div class="pbfill bd" style="width:35%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Sweetness</span><span class="pbval">Dry</span></div><div class="pbtrack"><div class="pbfill sw" style="width:5%"></div></div></div>
+        <div class="tags"><span class="tag">Grapefruit</span><span class="tag">Cut Grass</span><span class="tag">Lime</span><span class="tag">Gooseberry</span><span class="tag">White Peach</span><span class="tag">Mineral</span></div>
+      </div>
+      <div class="vcontent">
+        <div class="vwhat"><h4>What It Is</h4><p>The world's most accessible dry white. High natural acidity, light body, and an expressive aromatic profile that shifts by region — grassy and citrusy in New Zealand's Marlborough, mineral and flinty in France's Loire Valley, riper and more tropical in warm climates. If you hate oaky Chardonnay, this is your structural opposite and your default white.</p></div>
+        <div class="vregions"><h4>Key Regions</h4><p><em style="color:var(--cream)">Marlborough, NZ</em> — the dominant commercial style; grassy, citrusy. <em style="color:var(--cream)">Loire Valley, France</em> — Sancerre, Pouilly-Fumé; mineral and restrained (pricier). <em style="color:var(--cream)">Chile</em> — excellent value at $10–12. <em style="color:var(--cream)">California</em> — richer, more tropical; sometimes labeled Fumé Blanc.</p></div>
+        <div class="vbottles"><h4>Bottles to Try</h4>
+          <div class="bentry"><div><div class="bname">Kim Crawford</div><div class="bsub">Marlborough, NZ</div></div><span class="bprice">~$13</span></div>
+          <div class="bentry"><div><div class="bname">Oyster Bay</div><div class="bsub">Marlborough, NZ</div></div><span class="bprice">~$13</span></div>
+          <div class="bentry"><div><div class="bname">Whitehaven</div><div class="bsub">Marlborough, NZ</div></div><span class="bprice">~$15</span></div>
+          <div class="bentry"><div><div class="bname">Babich</div><div class="bsub">Marlborough, NZ</div></div><span class="bprice">~$12</span></div>
+          <div class="bentry"><div><div class="bname">Santa Carolina</div><div class="bsub">Central Valley, Chile</div></div><span class="bprice">~$10</span></div>
+        </div>
+        <div class="vfood"><h4>Food Pairings</h4><p>Goat cheese in any form. Oysters and raw bar. Grilled white fish. Asparagus. Thai green curry. Sushi. Pesto pasta. Green salads with citrus dressing.</p></div>
+        <div class="vsnacks"><h4>Snack Pairings</h4><p>Goat cheese on plain crackers. Castelvetrano olives. Edamame. Prosciutto-wrapped melon. Guacamole. Hummus with pita.</p></div>
+        <div class="vnote"><h4>Field Note</h4><p>Marlborough SB is the easiest on-ramp in white wine — consistent, well-distributed, priced right. Don't stop there. A Loire Sancerre (even at $25, above your ceiling) will reframe what the grape can do. Buy one once for the comparison.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PINOT GRIGIO -->
+  <div class="vcard" id="pinot-grigio">
+    <div class="vhead">
+      <span class="badge std">Standard</span>
+      <h3 class="vname">PINOT GRIGIO / PINOT GRIS</h3>
+      <span class="vtag">Two wines, one grape. Know the difference.</span>
+    </div>
+    <div class="vbody">
+      <div class="vprofile">
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Acidity</span><span class="pbval">Medium (IT) / Med-High (FR)</span></div><div class="pbtrack"><div class="pbfill ac" style="width:55%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Body</span><span class="pbval">Light (IT) / Full (FR)</span></div><div class="pbtrack"><div class="pbfill bd" style="width:28%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Sweetness</span><span class="pbval">Dry–Off-Dry</span></div><div class="pbtrack"><div class="pbfill sw" style="width:8%"></div></div></div>
+        <div class="tags"><span class="tag">Green Apple</span><span class="tag">Pear</span><span class="tag">Lemon</span><span class="tag">White Flowers</span><span class="tag">Peach (Alsace)</span><span class="tag">Smoke (Alsace)</span></div>
+      </div>
+      <div class="vcontent">
+        <div class="vwhat"><h4>What It Is</h4><p>The same grape, radically different wines. Italian Pinot Grigio (Veneto, Alto Adige) is light, crisp, neutral — green apple, lemon, white flowers. Alsatian Pinot Gris is richer, fuller, often slightly off-dry — peach, apricot, ginger, smoke. Oregon falls somewhere in between. The Italian style is what most people picture; the Alsatian is a completely different experience.</p></div>
+        <div class="vregions"><h4>Key Regions</h4><p><em style="color:var(--cream)">Veneto / Friuli, Italy</em> — light, crisp, affordable; the default. <em style="color:var(--cream)">Alto Adige, Italy</em> — more mineral and complex than standard Italian PG. <em style="color:var(--cream)">Alsace, France</em> — labeled Pinot Gris; richer, sometimes off-dry. <em style="color:var(--cream)">Oregon</em> — medium style, reliable value.</p></div>
+        <div class="vbottles"><h4>Bottles to Try</h4>
+          <div class="bentry"><div><div class="bname">Cavit</div><div class="bsub">Trentino, Italy</div></div><span class="bprice">~$10</span></div>
+          <div class="bentry"><div><div class="bname">Alois Lageder</div><div class="bsub">Alto Adige, Italy — upgrade</div></div><span class="bprice">~$16</span></div>
+          <div class="bentry"><div><div class="bname">Maso Canali</div><div class="bsub">Trentino, Italy</div></div><span class="bprice">~$16</span></div>
+          <div class="bentry"><div><div class="bname">A to Z Wineworks</div><div class="bsub">Oregon</div></div><span class="bprice">~$13</span></div>
+          <div class="bentry"><div><div class="bname">Pierre Sparr</div><div class="bsub">Alsace, France</div></div><span class="bprice">~$15</span></div>
+        </div>
+        <div class="vfood"><h4>Food Pairings</h4><p>Italian style: Bruschetta, fresh mozzarella, prosciutto, light pasta, calamari. Alsatian Gris: Pork, richer fish like salmon, mushroom dishes, soft cheese.</p></div>
+        <div class="vsnacks"><h4>Snack Pairings</h4><p>Charcuterie board. Fresh mozzarella with tomatoes. Prosciutto. Bruschetta. Light crackers. Thin-cut Italian potato chips (surprisingly works).</p></div>
+        <div class="vnote"><h4>Field Note</h4><p>Most grocery-store PG is the Veneto style — reliable and cheap but rarely interesting. Spend $3 more for the Alois Lageder from Alto Adige: same grape, noticeably better wine. If you see an Alsatian Pinot Gris, understand you're buying a different experience entirely.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- UNOAKED CHARDONNAY -->
+  <div class="vcard" id="chardonnay">
+    <div class="vhead">
+      <span class="badge std">Standard</span>
+      <h3 class="vname">CHARDONNAY (UNOAKED)</h3>
+      <span class="vtag">What it actually tastes like without the wood.</span>
+    </div>
+    <div class="vbody">
+      <div class="vprofile">
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Acidity</span><span class="pbval">Medium</span></div><div class="pbtrack"><div class="pbfill ac" style="width:52%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Body</span><span class="pbval">Medium–Full</span></div><div class="pbtrack"><div class="pbfill bd" style="width:58%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Sweetness</span><span class="pbval">Dry</span></div><div class="pbtrack"><div class="pbfill sw" style="width:5%"></div></div></div>
+        <div class="tags"><span class="tag">Green Apple</span><span class="tag">Citrus</span><span class="tag">Pear</span><span class="tag">Chalk</span><span class="tag">Mineral</span><span class="tag">Cream (light)</span></div>
+      </div>
+      <div class="vcontent">
+        <div class="vwhat"><h4>What It Is</h4><p>The world's most widely planted white grape is also a chameleon — and what you hate is a specific style, not the grape. California's buttery, vanilla-laden Chardonnay is the result of heavy oak aging. Remove the oak and you get something clean, mineral, and alive. Chablis — always Chardonnay, always unoaked — is the reference point for what this grape actually tastes like.</p></div>
+        <div class="vregions"><h4>Key Regions</h4><p><em style="color:var(--cream)">Chablis, France</em> — the gold standard; steely, mineral, green apple, chalk. Always unoaked. <em style="color:var(--cream)">Mâcon-Villages, France</em> — softer, pear and citrus, excellent value. <em style="color:var(--cream)">New Zealand</em> — look for bottles explicitly labeled "Unoaked Chardonnay." Avoid generic California Chard unless you know the producer.</p></div>
+        <div class="vbottles"><h4>Bottles to Try</h4>
+          <div class="bentry"><div><div class="bname">Kim Crawford Unoaked</div><div class="bsub">Marlborough, NZ</div></div><span class="bprice">~$13</span></div>
+          <div class="bentry"><div><div class="bname">Georges Dubœuf Mâcon-Villages</div><div class="bsub">Burgundy, France</div></div><span class="bprice">~$13</span></div>
+          <div class="bentry"><div><div class="bname">Louis Jadot Mâcon-Villages</div><div class="bsub">Burgundy, France</div></div><span class="bprice">~$16</span></div>
+          <div class="bentry"><div><div class="bname">William Fèvre Chablis</div><div class="bsub">Chablis, France — reference bottle</div></div><span class="bprice">~$22</span></div>
+        </div>
+        <div class="vfood"><h4>Food Pairings</h4><p>Roast chicken or pork loin. Brie and Camembert. Cream-based pasta. Mushroom risotto. Lobster and scallops. Apple and cheese plates.</p></div>
+        <div class="vsnacks"><h4>Snack Pairings</h4><p>Smoked salmon on crackers. Brie with apple slices. Buttered popcorn (genuinely excellent). Roasted cashews and almonds. White cheddar.</p></div>
+        <div class="vnote"><h4>Field Note</h4><p>William Fèvre Chablis at $22 is slightly over your ceiling but worth buying once as a reference point. It will show you what Chardonnay tastes like when the winemaker steps back and lets the limestone speak. After that bottle, you'll identify unoaked Chard by nose alone.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RIESLING -->
+  <div class="vcard" id="riesling">
+    <div class="vhead">
+      <span class="badge std">Standard</span>
+      <h3 class="vname">RIESLING</h3>
+      <span class="vtag">Wrongly accused. The driest grape with the sweetest reputation.</span>
+    </div>
+    <div class="vbody">
+      <div class="vprofile">
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Acidity</span><span class="pbval">Very High</span></div><div class="pbtrack"><div class="pbfill ac" style="width:90%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Body</span><span class="pbval">Light</span></div><div class="pbtrack"><div class="pbfill bd" style="width:28%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Sweetness</span><span class="pbval">Variable — Dry to Sweet</span></div><div class="pbtrack"><div class="pbfill sw" style="width:40%"></div></div></div>
+        <div class="tags"><span class="tag">Peach</span><span class="tag">Apricot</span><span class="tag">Lime</span><span class="tag">Petrol</span><span class="tag">Slate</span><span class="tag">Honey</span></div>
+      </div>
+      <div class="vcontent">
+        <div class="vwhat"><h4>What It Is</h4><p>The most misunderstood grape in the world and arguably the most versatile. Riesling spans bone-dry to lusciously sweet, with the highest natural acidity of any major white variety — meaning even sweet versions balance on a structural wire. Good aged Riesling develops a petrol note that sounds alarming but is a prized, complex character. The stigma of sweetness comes from cheap German plonk in the 1970s. Don't let it define your expectations.</p></div>
+        <div class="vregions"><h4>Key Regions</h4><p><em style="color:var(--cream)">Mosel, Germany</em> — most delicate; slate soil, low alcohol, high acid. <em style="color:var(--cream)">Alsace, France</em> — dry, full-bodied, powerful; different from German style. <em style="color:var(--cream)">Washington State</em> — off-dry to dry, excellent value. <em style="color:var(--cream)">Clare/Eden Valley, Australia</em> — bone dry, lime-driven. Look for "trocken" on German labels for dry.</p></div>
+        <div class="vbottles"><h4>Bottles to Try</h4>
+          <div class="bentry"><div><div class="bname">Château Ste. Michelle</div><div class="bsub">Columbia Valley, WA</div></div><span class="bprice">~$11</span></div>
+          <div class="bentry"><div><div class="bname">Dr. Loosen "Dr. L"</div><div class="bsub">Mosel, Germany</div></div><span class="bprice">~$13</span></div>
+          <div class="bentry"><div><div class="bname">Kung Fu Girl</div><div class="bsub">Columbia Valley, WA</div></div><span class="bprice">~$14</span></div>
+          <div class="bentry"><div><div class="bname">Trimbach</div><div class="bsub">Alsace, France — dry style</div></div><span class="bprice">~$19</span></div>
+        </div>
+        <div class="vfood"><h4>Food Pairings</h4><p>The best pairing for spicy food — Thai, Sichuan, Korean BBQ, Indian dal. Also excellent with pork, duck, ham, dim sum, and charcuterie. The residual sugar in off-dry versions handles heat better than any other white.</p></div>
+        <div class="vsnacks"><h4>Snack Pairings</h4><p>Spicy popcorn. Thai spring rolls with peanut sauce. Prosciutto and fig. Spiced nuts. Japanese snack mix. Pork rinds (the fat and salt play against the residual sugar).</p></div>
+        <div class="vnote"><h4>Field Note</h4><p>If you want dry Riesling in a restaurant, say so explicitly or ask for Alsatian. Servers frequently pour off-dry by default. The Dr. L is slightly off-dry — pleasant, easy. The Trimbach Alsace shows you the grape's full dry structure.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MOSCATO -->
+  <div class="vcard" id="moscato">
+    <div class="vhead">
+      <span class="badge std">Standard</span>
+      <h3 class="vname">MOSCATO</h3>
+      <span class="vtag">Sweet by design. Serious in the right bottle.</span>
+    </div>
+    <div class="vbody">
+      <div class="vprofile">
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Acidity</span><span class="pbval">Medium</span></div><div class="pbtrack"><div class="pbfill ac" style="width:48%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Body</span><span class="pbval">Light</span></div><div class="pbtrack"><div class="pbfill bd" style="width:22%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Sweetness</span><span class="pbval">Very Sweet</span></div><div class="pbtrack"><div class="pbfill sw" style="width:88%"></div></div></div>
+        <div class="tags"><span class="tag">Peach</span><span class="tag">Orange Blossom</span><span class="tag">Apricot</span><span class="tag">Rose</span><span class="tag">Lychee</span><span class="tag">Honey</span></div>
+      </div>
+      <div class="vcontent">
+        <div class="vwhat"><h4>What It Is</h4><p>Intensely aromatic, low-alcohol, and sweet. The commercial version (La Marca, Barefoot) is perfectly fine. The Italian version — Moscato d'Asti — is a genuinely different and more refined wine: lower alcohol (5–7%), lightly fizzy, more complex aromatics, sweet but balanced by real acidity. Don't conflate the two. Moscato d'Asti is also one of the rare wines that genuinely improves a spicy meal.</p></div>
+        <div class="vregions"><h4>Key Regions</h4><p><em style="color:var(--cream)">Asti, Piedmont, Italy</em> — Moscato d'Asti; the serious version, DOCG protected. <em style="color:var(--cream)">California</em> — mass-market style; sweeter, less complex. <em style="color:var(--cream)">Australia</em> — Rutherglen Muscat is a fortified dessert category of its own.</p></div>
+        <div class="vbottles"><h4>Bottles to Try</h4>
+          <div class="bentry"><div><div class="bname">La Marca</div><div class="bsub">Italy</div></div><span class="bprice">~$13</span></div>
+          <div class="bentry"><div><div class="bname">Mionetto Moscato</div><div class="bsub">Veneto, Italy</div></div><span class="bprice">~$14</span></div>
+          <div class="bentry"><div><div class="bname">Saracco Moscato d'Asti</div><div class="bsub">Piedmont, Italy — upgrade</div></div><span class="bprice">~$18</span></div>
+        </div>
+        <div class="vfood"><h4>Food Pairings</h4><p>Fruit tarts and desserts. Spicy dishes — the sweetness counters heat. Blue cheese (classic sweet-salt contrast). Light pastries and biscotti. Nashville hot chicken, counterintuitively.</p></div>
+        <div class="vsnacks"><h4>Snack Pairings</h4><p>Shortbread cookies. Blue cheese on crackers. Macarons. Fresh fruit. Spicy potato chips. Brie with honey.</p></div>
+        <div class="vnote"><h4>Field Note</h4><p>The Saracco Moscato d'Asti is worth the extra $4–5 as a one-time reference. It shows what the grape does when a serious producer is paying attention. Also the ideal brunch wine — low-alcohol, complex, and effortless over conversation.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ NICHE VARIETALS ════════ -->
+<section class="wrap" id="niche">
+  <div class="sec-head">
+    <div class="sec-kicker">Off the Beaten Track</div>
+    <h2 class="sec-title">NICHE VARIETALS</h2>
+    <p class="sec-sub">Nine grapes worth knowing. Each one either dramatically overperforms for the price, fills a pairing gap nothing else can, or simply rewards curiosity in a way the standard five don't.</p>
+  </div>
+
+  <!-- ALBARIÑO -->
+  <div class="vcard" id="albarino">
+    <div class="vhead"><span class="badge nic">Niche</span><h3 class="vname">ALBARIÑO</h3><span class="vtag">The Atlantic Ocean in a glass.</span></div>
+    <div class="vbody">
+      <div class="vprofile">
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Acidity</span><span class="pbval">High</span></div><div class="pbtrack"><div class="pbfill ac" style="width:76%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Body</span><span class="pbval">Medium</span></div><div class="pbtrack"><div class="pbfill bd" style="width:48%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Sweetness</span><span class="pbval">Dry</span></div><div class="pbtrack"><div class="pbfill sw" style="width:5%"></div></div></div>
+        <div class="tags"><span class="tag">White Peach</span><span class="tag">Lemon Zest</span><span class="tag">Saline</span><span class="tag">Apricot</span><span class="tag">Almond</span><span class="tag">Grapefruit</span></div>
+      </div>
+      <div class="vcontent">
+        <div class="vwhat"><h4>What It Is</h4><p>Spain's defining white grape, from Galicia in the Atlantic northwest. High acidity, medium body, and a briny, saline quality that's almost literal — you taste the coastline. Often has a slight tingle from residual CO₂. Portugal grows the same grape as Alvarinho, blended into Vinho Verde for a lighter, slightly fizzy version.</p></div>
+        <div class="vregions"><h4>Key Regions</h4><p><em style="color:var(--cream)">Rías Baixas, Galicia, Spain</em> — primary region, gold standard. <em style="color:var(--cream)">Vinho Verde, Portugal</em> — labeled Alvarinho; often blended, lighter, slightly effervescent. Both share Atlantic coastline as defining terroir.</p></div>
+        <div class="vbottles"><h4>Bottles to Try</h4>
+          <div class="bentry"><div><div class="bname">Burgáns</div><div class="bsub">Rías Baixas, Spain</div></div><span class="bprice">~$13</span></div>
+          <div class="bentry"><div><div class="bname">Martín Códax</div><div class="bsub">Rías Baixas, Spain</div></div><span class="bprice">~$14</span></div>
+          <div class="bentry"><div><div class="bname">Laxas</div><div class="bsub">Rías Baixas, Spain</div></div><span class="bprice">~$14</span></div>
+          <div class="bentry"><div><div class="bname">Pazo Señorans</div><div class="bsub">Rías Baixas — upgrade</div></div><span class="bprice">~$20</span></div>
+        </div>
+        <div class="vfood"><h4>Food Pairings</h4><p>Seafood is nearly genetic: mussels, oysters, clams, octopus, grilled shrimp, ceviche, paella. The regional match — Galician seafood with Galician wine — is one of the most reliable pairings in existence. Also works with chips and salsa, which surprises people.</p></div>
+        <div class="vsnacks"><h4>Snack Pairings</h4><p>Tinned sardines or anchovies. Shrimp cocktail. Salt and vinegar chips. Chips and salsa. Seafood crackers with lemon dip.</p></div>
+        <div class="vnote"><h4>Field Note</h4><p>The best first niche variety to try after the standard five. Burgáns is widely available at Total Wine, well-priced, and has an immediate sensory hook — the saline, ocean-spray quality is unlike anything in the standard lineup.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GRÜNER VELTLINER -->
+  <div class="vcard" id="gruner">
+    <div class="vhead"><span class="badge nic">Niche</span><h3 class="vname">GRÜNER VELTLINER</h3><span class="vtag">Austria's answer. White pepper included.</span></div>
+    <div class="vbody">
+      <div class="vprofile">
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Acidity</span><span class="pbval">High</span></div><div class="pbtrack"><div class="pbfill ac" style="width:72%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Body</span><span class="pbval">Light–Medium</span></div><div class="pbtrack"><div class="pbfill bd" style="width:40%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Sweetness</span><span class="pbval">Dry</span></div><div class="pbtrack"><div class="pbfill sw" style="width:5%"></div></div></div>
+        <div class="tags"><span class="tag">White Pepper</span><span class="tag">Citrus</span><span class="tag">Mineral</span><span class="tag">Radish</span><span class="tag">Grapefruit</span><span class="tag">Herbs</span></div>
+      </div>
+      <div class="vcontent">
+        <div class="vwhat"><h4>What It Is</h4><p>Austria's signature white grape and one of Europe's best value secrets. The defining character is a distinctive white pepper note (sometimes called "pfeffrig") found in no other major variety. High acidity, lean body, excellent food versatility. Handles vegetables and bitter greens better than almost any other white — including asparagus, which breaks most wines' pairing logic.</p></div>
+        <div class="vregions"><h4>Key Regions</h4><p>All Austria: <em style="color:var(--cream)">Wachau</em> (most prestigious, most mineral), <em style="color:var(--cream)">Kamptal</em>, <em style="color:var(--cream)">Kremstal</em>, <em style="color:var(--cream)">Wagram</em>. The Danube valley is the defining terroir. Wachau has its own classification: Steinfeder (lightest) → Federspiel → Smaragd (fullest).</p></div>
+        <div class="vbottles"><h4>Bottles to Try</h4>
+          <div class="bentry"><div><div class="bname">Hugl Classic</div><div class="bsub">Niederösterreich, Austria</div></div><span class="bprice">~$13</span></div>
+          <div class="bentry"><div><div class="bname">Zull</div><div class="bsub">Weinviertel, Austria</div></div><span class="bprice">~$15</span></div>
+          <div class="bentry"><div><div class="bname">Loimer Langenlois</div><div class="bsub">Kamptal, Austria</div></div><span class="bprice">~$17</span></div>
+        </div>
+        <div class="vfood"><h4>Food Pairings</h4><p>Asparagus — the definitive pairing; GV handles what kills most wine. Artichokes. Wiener Schnitzel. White fish. Potato dishes. Green salads. Herb-forward preparations. Light charcuterie.</p></div>
+        <div class="vsnacks"><h4>Snack Pairings</h4><p>Radishes with butter and salt. Herb crackers. Light charcuterie. Fresh goat cheese. Cucumber and dill dip.</p></div>
+        <div class="vnote"><h4>Field Note</h4><p>The white pepper note is real and distinctive — polarizing for some, fascinating for others. The Loimer is the most reliably available introduction in the US market at this price. If you smell something peppery and slightly vegetal alongside the citrus, you've found it.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VERMENTINO -->
+  <div class="vcard" id="vermentino">
+    <div class="vhead"><span class="badge nic">Niche</span><h3 class="vname">VERMENTINO</h3><span class="vtag">Sardinia's salty, bitter-finished secret.</span></div>
+    <div class="vbody">
+      <div class="vprofile">
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Acidity</span><span class="pbval">Medium-High</span></div><div class="pbtrack"><div class="pbfill ac" style="width:70%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Body</span><span class="pbval">Medium</span></div><div class="pbtrack"><div class="pbfill bd" style="width:50%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Sweetness</span><span class="pbval">Dry</span></div><div class="pbtrack"><div class="pbfill sw" style="width:5%"></div></div></div>
+        <div class="tags"><span class="tag">Lemon</span><span class="tag">Lime</span><span class="tag">Sea Salt</span><span class="tag">Almond</span><span class="tag">Green Herbs</span><span class="tag">White Peach</span></div>
+      </div>
+      <div class="vcontent">
+        <div class="vwhat"><h4>What It Is</h4><p>Sardinia's dominant white grape — briny, citrusy, with a characteristic slightly bitter almond finish that is entirely typical and not a flaw. Think of it as the bitter finish on a good espresso. Medium body and enough acidity to hold up to the Mediterranean diet's olive oil and seafood. Also grown in Liguria and Corsica with slight stylistic variations. Systematically underpriced in the US market.</p></div>
+        <div class="vregions"><h4>Key Regions</h4><p><em style="color:var(--cream)">Sardinia, Italy</em> — primary; labeled Vermentino di Sardegna or Vermentino di Gallura (DOCG, more complex). <em style="color:var(--cream)">Liguria, Italy</em> — lighter, more delicate. <em style="color:var(--cream)">Corsica, France</em> — similar to Sardinian style, labeled Patrimonio.</p></div>
+        <div class="vbottles"><h4>Bottles to Try</h4>
+          <div class="bentry"><div><div class="bname">Sella &amp; Mosca La Cala</div><div class="bsub">Sardegna, Italy</div></div><span class="bprice">~$13</span></div>
+          <div class="bentry"><div><div class="bname">Argiolas Costamolino</div><div class="bsub">Sardegna, Italy</div></div><span class="bprice">~$14</span></div>
+        </div>
+        <div class="vfood"><h4>Food Pairings</h4><p>Seafood pasta, especially linguine alle vongole. Grilled whole fish. Fried calamari. Bruschetta and crostini. Pesto pasta. Roasted vegetables with olive oil. Pizza bianca.</p></div>
+        <div class="vsnacks"><h4>Snack Pairings</h4><p>Good olives. Bruschetta with tomatoes. Prosciutto. Italian taralli crackers. Fresh mozzarella with olive oil. Caponata on crostini.</p></div>
+        <div class="vnote"><h4>Field Note</h4><p>The bitter finish is intentional — it's the same bitterness as good espresso or quality gin. Drink it with food and it resolves into balance. The Argiolas Costamolino is the most consistently available at Total Wine and is a reliable introduction to the grape's character.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VIOGNIER -->
+  <div class="vcard" id="viognier">
+    <div class="vhead"><span class="badge nic">Niche</span><h3 class="vname">VIOGNIER</h3><span class="vtag">A ripe peach fell into a flower garden.</span></div>
+    <div class="vbody">
+      <div class="vprofile">
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Acidity</span><span class="pbval">Low–Medium</span></div><div class="pbtrack"><div class="pbfill ac" style="width:30%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Body</span><span class="pbval">Full</span></div><div class="pbtrack"><div class="pbfill bd" style="width:75%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Sweetness</span><span class="pbval">Dry (smells sweeter)</span></div><div class="pbtrack"><div class="pbfill sw" style="width:10%"></div></div></div>
+        <div class="tags"><span class="tag">Peach</span><span class="tag">Apricot</span><span class="tag">Honeysuckle</span><span class="tag">Violets</span><span class="tag">Orange Blossom</span><span class="tag">Cream</span></div>
+      </div>
+      <div class="vcontent">
+        <div class="vwhat"><h4>What It Is</h4><p>The most seductive white grape few people have deliberately ordered. Full-bodied, intensely aromatic, dry but smelling deceptively sweet — all ripe stone fruit, flowers, and cream. The risk is low acidity; poor Viognier tastes flat and flabby. Good Viognier is stunning. Note: Virginia produces genuinely excellent Viognier that occasionally surfaces at DC-area retailers — worth seeking out if you see it.</p></div>
+        <div class="vregions"><h4>Key Regions</h4><p><em style="color:var(--cream)">Condrieu, Rhône, France</em> — the original; $40–80+, mostly out of scope. <em style="color:var(--cream)">Eden Valley, Australia</em> — reliable, well-structured, great value. <em style="color:var(--cream)">California</em> — variable; buy from known producers. <em style="color:var(--cream)">Virginia</em> — increasingly serious near DC; King Family Vineyards, Early Mountain worth finding.</p></div>
+        <div class="vbottles"><h4>Bottles to Try</h4>
+          <div class="bentry"><div><div class="bname">Cline Cellars</div><div class="bsub">North Coast, CA</div></div><span class="bprice">~$12</span></div>
+          <div class="bentry"><div><div class="bname">Bonterra Organic</div><div class="bsub">Mendocino, CA</div></div><span class="bprice">~$14</span></div>
+          <div class="bentry"><div><div class="bname">Yalumba Eden Valley</div><div class="bsub">Eden Valley, Australia</div></div><span class="bprice">~$17</span></div>
+        </div>
+        <div class="vfood"><h4>Food Pairings</h4><p>Rich seafood: lobster, scallops, crab. Chicken in cream or tarragon sauce. Thai yellow curry. Mango-glazed preparations. Rich cheeses — washed rind and semi-soft.</p></div>
+        <div class="vsnacks"><h4>Snack Pairings</h4><p>Brie with peach jam. Honey and cashews. Smoked salmon. Stone fruit with mild cheese. Mango chutney on crackers.</p></div>
+        <div class="vnote"><h4>Field Note</h4><p>Start with the Yalumba Eden Valley — Australian producers handle Viognier's low acidity better than most California producers at this price. The aromatics will be immediately obvious; it smells unlike anything else in the store.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ASSYRTIKO -->
+  <div class="vcard" id="assyrtiko">
+    <div class="vhead"><span class="badge nic">Niche</span><h3 class="vname">ASSYRTIKO</h3><span class="vtag">Grown in volcanic ash. Tastes like it.</span></div>
+    <div class="vbody">
+      <div class="vprofile">
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Acidity</span><span class="pbval">Very High</span></div><div class="pbtrack"><div class="pbfill ac" style="width:87%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Body</span><span class="pbval">Medium–Full</span></div><div class="pbtrack"><div class="pbfill bd" style="width:55%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Sweetness</span><span class="pbval">Bone Dry</span></div><div class="pbtrack"><div class="pbfill sw" style="width:5%"></div></div></div>
+        <div class="tags"><span class="tag">Lemon</span><span class="tag">Lime</span><span class="tag">Sea Spray</span><span class="tag">Volcanic Mineral</span><span class="tag">White Flowers</span><span class="tag">Chalk</span></div>
+      </div>
+      <div class="vcontent">
+        <div class="vwhat"><h4>What It Is</h4><p>Greece's most important white grape and one of the world's most distinctive terroir expressions. Santorini Assyrtiko grows in volcanic pumice soil on vines trained in low baskets to protect from the island's wind — some of the oldest ungrafted vines in Europe. The result is extremely high acidity, intense minerality, and a citrus character that is genuinely difficult to find elsewhere.</p></div>
+        <div class="vregions"><h4>Key Regions</h4><p><em style="color:var(--cream)">Santorini, Greece</em> — the original and most distinctive; volcanic soil, PDO protected. <em style="color:var(--cream)">Mainland Greece</em> — increasingly planted; good but less mineral. Look for "Santorini" on the label for the volcanic expression.</p></div>
+        <div class="vbottles"><h4>Bottles to Try</h4>
+          <div class="bentry"><div><div class="bname">Domaine Gerovassiliou</div><div class="bsub">Epanomi, Greece</div></div><span class="bprice">~$17</span></div>
+          <div class="bentry"><div><div class="bname">Santo Wines</div><div class="bsub">Santorini, Greece</div></div><span class="bprice">~$19</span></div>
+          <div class="bentry"><div><div class="bname">Sigalas Santorini</div><div class="bsub">Santorini — reference bottle</div></div><span class="bprice">~$21</span></div>
+        </div>
+        <div class="vfood"><h4>Food Pairings</h4><p>Raw bar and oysters. Grilled octopus (the regional pairing). Whole grilled fish. Greek salad. Fried calamari. Feta-based dishes. Anything from the Mediterranean you'd squeeze lemon over.</p></div>
+        <div class="vsnacks"><h4>Snack Pairings</h4><p>Feta and olives. Oyster crackers with citrus dip. Tinned fish (sardines, anchovies). Spanakopita. Hummus with lemon.</p></div>
+        <div class="vnote"><h4>Field Note</h4><p>The Sigalas is slightly over your ceiling but is the most recognized Santorini producer in the US and worth the extra dollar. The Gerovassiliou is mainland, not volcanic, but is a reliable widely-available introduction to the grape's character at an easier price.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PICPOUL -->
+  <div class="vcard" id="picpoul">
+    <div class="vhead"><span class="badge nic">Niche</span><h3 class="vname">PICPOUL DE PINET</h3><span class="vtag">Lip-stinger. That's the literal translation.</span></div>
+    <div class="vbody">
+      <div class="vprofile">
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Acidity</span><span class="pbval">Very High</span></div><div class="pbtrack"><div class="pbfill ac" style="width:88%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Body</span><span class="pbval">Light</span></div><div class="pbtrack"><div class="pbfill bd" style="width:22%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Sweetness</span><span class="pbval">Bone Dry</span></div><div class="pbtrack"><div class="pbfill sw" style="width:5%"></div></div></div>
+        <div class="tags"><span class="tag">Lemon</span><span class="tag">Green Apple</span><span class="tag">White Flowers</span><span class="tag">Saline</span><span class="tag">Herb</span><span class="tag">Crisp</span></div>
+      </div>
+      <div class="vcontent">
+        <div class="vwhat"><h4>What It Is</h4><p>"Picpoul" means lip-stinger in Occitan — a reference to the grape's extreme natural acidity. Grown exclusively in the Languedoc, directly adjacent to oyster farming operations in the Thau lagoon. The pairing is almost geographic inevitability. Light-bodied, very dry, aggressively crisp, with lemon and green apple and a saline finish. Outstanding value: almost always under $14.</p></div>
+        <div class="vregions"><h4>Key Regions</h4><p><em style="color:var(--cream)">Pinet, Languedoc, France</em> — the only appellation. All Picpoul de Pinet comes from a small AOP near Montpellier. The proximity to Mediterranean oyster beds is the origin of its defining pairing.</p></div>
+        <div class="vbottles"><h4>Bottles to Try</h4>
+          <div class="bentry"><div><div class="bname">Hugues de Beauvignac</div><div class="bsub">Picpoul de Pinet, France</div></div><span class="bprice">~$11</span></div>
+          <div class="bentry"><div><div class="bname">Domaine Félines Jourdan</div><div class="bsub">Picpoul de Pinet, France</div></div><span class="bprice">~$14</span></div>
+        </div>
+        <div class="vfood"><h4>Food Pairings</h4><p>Oysters — the regional pairing, virtually perfect. Mussels. Clams. Fish and chips. Fried seafood. Light green salads. Goat cheese. Grilled shrimp.</p></div>
+        <div class="vsnacks"><h4>Snack Pairings</h4><p>Oyster crackers with lemon. Lemon-herb dip with pita. Rice crackers. Light seafood snacks. Cucumber and herb cream cheese.</p></div>
+        <div class="vnote"><h4>Field Note</h4><p>One of the highest-value purchases in this guide. At $11–14, it's a genuinely distinctive French white with a clear identity and a specific job. If you eat oysters, or want a porch-drinking wine in summer that requires zero thought, this is the bottle.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TORRONTÉS -->
+  <div class="vcard" id="torrontes">
+    <div class="vhead"><span class="badge nic">Niche</span><h3 class="vname">TORRONTÉS</h3><span class="vtag">Smells like a garden. Drinks bone dry. Don't be fooled.</span></div>
+    <div class="vbody">
+      <div class="vprofile">
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Acidity</span><span class="pbval">Medium-High</span></div><div class="pbtrack"><div class="pbfill ac" style="width:62%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Body</span><span class="pbval">Light–Medium</span></div><div class="pbtrack"><div class="pbfill bd" style="width:38%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Sweetness</span><span class="pbval">Dry (appears sweeter)</span></div><div class="pbtrack"><div class="pbfill sw" style="width:10%"></div></div></div>
+        <div class="tags"><span class="tag">Rose Petals</span><span class="tag">Lychee</span><span class="tag">Jasmine</span><span class="tag">White Peach</span><span class="tag">Orange Blossom</span><span class="tag">Dry Finish</span></div>
+      </div>
+      <div class="vcontent">
+        <div class="vwhat"><h4>What It Is</h4><p>Argentina's most distinctive white grape and one of the most misunderstood in any wine shop. On the nose: intensely floral, almost like perfume — roses, lychee, jasmine. On the palate: dry. The disconnect between aromatic sweetness and actual dryness surprises almost everyone drinking it for the first time. South America's best argument for a white wine identity beyond Malbec's red shadow.</p></div>
+        <div class="vregions"><h4>Key Regions</h4><p><em style="color:var(--cream)">Salta, Argentina</em> — highest-altitude vineyards; the most aromatic and precise Torrontés. <em style="color:var(--cream)">La Rioja, Argentina</em> — the most common style. Altitude is key: cooler nights preserve the aromatics that define this grape.</p></div>
+        <div class="vbottles"><h4>Bottles to Try</h4>
+          <div class="bentry"><div><div class="bname">Santa Julia</div><div class="bsub">Mendoza, Argentina</div></div><span class="bprice">~$11</span></div>
+          <div class="bentry"><div><div class="bname">Crios de Susana Balbo</div><div class="bsub">Mendoza, Argentina</div></div><span class="bprice">~$13</span></div>
+          <div class="bentry"><div><div class="bname">Zuccardi Valle de Uco</div><div class="bsub">Uco Valley, Argentina</div></div><span class="bprice">~$15</span></div>
+        </div>
+        <div class="vfood"><h4>Food Pairings</h4><p>Thai food — especially lemongrass and coconut milk dishes. Indian vegetarian curries. Tapas. Ceviche and aguachile. Fresh goat cheese. Light charcuterie. Empanadas.</p></div>
+        <div class="vsnacks"><h4>Snack Pairings</h4><p>Edamame. Thai spring rolls. Lychee and fresh fruit. Spiced nuts. Light herb crackers. Prosciutto and melon.</p></div>
+        <div class="vnote"><h4>Field Note</h4><p>The nose-palate disconnect is a genuine conversation piece every time. The Crios Torrontés is the most widely distributed and reliable introductory bottle in the US market. Serve cold — warmer temperatures make the aromatics cloying.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FALANGHINA -->
+  <div class="vcard" id="falanghina">
+    <div class="vhead"><span class="badge nic">Niche</span><h3 class="vname">FALANGHINA</h3><span class="vtag">Pre-Roman and still excellent.</span></div>
+    <div class="vbody">
+      <div class="vprofile">
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Acidity</span><span class="pbval">Medium-High</span></div><div class="pbtrack"><div class="pbfill ac" style="width:65%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Body</span><span class="pbval">Medium</span></div><div class="pbtrack"><div class="pbfill bd" style="width:52%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Sweetness</span><span class="pbval">Dry</span></div><div class="pbtrack"><div class="pbfill sw" style="width:5%"></div></div></div>
+        <div class="tags"><span class="tag">Citrus</span><span class="tag">White Peach</span><span class="tag">Tropical</span><span class="tag">Mineral</span><span class="tag">Herb</span><span class="tag">Almond</span></div>
+      </div>
+      <div class="vcontent">
+        <div class="vwhat"><h4>What It Is</h4><p>One of Italy's oldest documented grapes — evidence suggests Romans cultivated it as Falernian wine. From Campania (the Naples region), it has a citrus-forward profile with a slight tropical edge and volcanic mineral quality, particularly from the Campi Flegrei subzone grown on actual volcanic soil. Think of it as a slightly richer, more textured Vermentino with added tropical complexity. An excellent pizza wine.</p></div>
+        <div class="vregions"><h4>Key Regions</h4><p><em style="color:var(--cream)">Campania, Italy</em> — the only region. <em style="color:var(--cream)">Sannio</em> (most common) and <em style="color:var(--cream)">Campi Flegrei</em> (volcanic soil, more mineral). Look for Campi Flegrei if you want the volcanic expression.</p></div>
+        <div class="vbottles"><h4>Bottles to Try</h4>
+          <div class="bentry"><div><div class="bname">Terredora</div><div class="bsub">Campania, Italy</div></div><span class="bprice">~$14</span></div>
+          <div class="bentry"><div><div class="bname">Feudi di San Gregorio</div><div class="bsub">Campania, Italy</div></div><span class="bprice">~$15</span></div>
+        </div>
+        <div class="vfood"><h4>Food Pairings</h4><p>Pizza — classic Neapolitan pairing. Seafood pasta, especially linguine alle vongole. Bruschetta. Fried calamari. Grilled whole fish. Mozzarella di bufala.</p></div>
+        <div class="vsnacks"><h4>Snack Pairings</h4><p>Pizza bites. Bruschetta with cherry tomatoes. Italian taralli crackers. Olives and fresh mozzarella. Prosciutto. Olive oil and herb bread.</p></div>
+        <div class="vnote"><h4>Field Note</h4><p>"Falanghina" on a label is unfamiliar enough to trigger hesitation in a store. Don't let it. Both the Terredora and Feudi di San Gregorio are reliably available at Total Wine and are well-made representations of what this grape does under $16.</p></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MUSCADET -->
+  <div class="vcard" id="muscadet">
+    <div class="vhead"><span class="badge nic">Niche</span><h3 class="vname">MUSCADET</h3><span class="vtag">The best value in white wine. Nobody orders it.</span></div>
+    <div class="vbody">
+      <div class="vprofile">
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Acidity</span><span class="pbval">High</span></div><div class="pbtrack"><div class="pbfill ac" style="width:78%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Body</span><span class="pbval">Light</span></div><div class="pbtrack"><div class="pbfill bd" style="width:20%"></div></div></div>
+        <div class="pbar"><div class="pbhead"><span class="pblabel">Sweetness</span><span class="pbval">Bone Dry</span></div><div class="pbtrack"><div class="pbfill sw" style="width:5%"></div></div></div>
+        <div class="tags"><span class="tag">Green Apple</span><span class="tag">Lemon</span><span class="tag">Chalk</span><span class="tag">Yeast</span><span class="tag">Brioche (sur lie)</span><span class="tag">Sea Salt</span></div>
+      </div>
+      <div class="vcontent">
+        <div class="vwhat"><h4>What It Is</h4><p>Made from the Melon de Bourgogne grape in the Loire Valley, Muscadet is possibly the most undervalued white wine in the world. Light-bodied, bone dry, high acid, mineral. The best versions are aged "sur lie" — on spent yeast after fermentation — which adds a creamy, bread-dough texture. The "sur lie" on the label is not optional: it's what makes the wine interesting rather than merely thin.</p></div>
+        <div class="vregions"><h4>Key Regions</h4><p>All <em style="color:var(--cream)">Loire Valley, France</em>. Best subappellation: <em style="color:var(--cream)">Muscadet-Sèvre et Maine sur lie</em> — look for that exact phrase. Generic "Muscadet" without the sur lie designation is a lesser wine. Cru Muscadet (single-village) are excellent at slightly higher prices.</p></div>
+        <div class="vbottles"><h4>Bottles to Try</h4>
+          <div class="bentry"><div><div class="bname">Château du Cléray</div><div class="bsub">Muscadet-Sèvre et Maine, France</div></div><span class="bprice">~$13</span></div>
+          <div class="bentry"><div><div class="bname">Domaine de la Pépière</div><div class="bsub">Muscadet-Sèvre et Maine, France</div></div><span class="bprice">~$16</span></div>
+        </div>
+        <div class="vfood"><h4>Food Pairings</h4><p>Oysters — arguably the most perfect food-wine pairing at this price point, full stop. Mussels. Clams. Steamed shellfish with butter. Grilled white fish. Goat cheese. Crab cakes.</p></div>
+        <div class="vsnacks"><h4>Snack Pairings</h4><p>Oyster crackers with lemon. Goat cheese on rye crackers. Tinned clams or mussels. Cold crab salad. Fresh chèvre with herbs.</p></div>
+        <div class="vnote"><h4>Field Note</h4><p>Muscadet-Sèvre et Maine sur lie with a plate of raw oysters is a cheat code — $13 and it works better than almost any wine twice the price. The name looks intimidating; it's just a French appellation. You're ordering it the next time there are oysters on the table.</p></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ PRICE TIERS ════════ -->
+<section class="wrap" id="prices">
+  <div class="sec-head">
+    <div class="sec-kicker">Spend Smart</div>
+    <h2 class="sec-title">PRICE TIER GUIDE</h2>
+    <p class="sec-sub">What you're actually buying at each price point — and where the quality cliff sits in the US market.</p>
+  </div>
+  <div class="tier-grid">
+    <div class="tcard">
+      <div class="trange">Under $10</div>
+      <div class="tlabel">Industrial Tier</div>
+      <p class="tdesc">Mass production at scale. Wines engineered for inoffensive consistency, frequently sweetened, often oak-chipped rather than barrel-aged. Not undrinkable — fine for cooking, large parties, casual mixing.</p>
+      <ul class="tex">
+        <li><strong>Barefoot</strong> — reliable, simple, sweet-leaning</li>
+        <li><strong>[yellow tail]</strong> — Australian, consistent, mass market</li>
+        <li><strong>Bota Box</strong> — box format, good for cooking</li>
+        <li><strong>Cupcake</strong> — sweeter style, widely distributed</li>
+      </ul>
+    </div>
+    <div class="tcard">
+      <div class="trange">$10–14</div>
+      <div class="tlabel">Value Tier — Quality Begins Here</div>
+      <p class="tdesc">Where genuine varietal character starts to emerge. Real acidity, regional identity, winemaking decisions. The quality cliff lives between this tier and the one below. Most of this guide's best-value bottles.</p>
+      <ul class="tex">
+        <li><strong>Kim Crawford SB</strong> — Marlborough ~$13</li>
+        <li><strong>Dr. Loosen "Dr. L"</strong> — Mosel Riesling ~$13</li>
+        <li><strong>Burgáns Albariño</strong> — Rías Baixas ~$13</li>
+        <li><strong>Hugues de Beauvignac</strong> — Picpoul ~$11</li>
+        <li><strong>Château du Cléray</strong> — Muscadet ~$13</li>
+        <li><strong>Crios Torrontés</strong> — Argentina ~$13</li>
+        <li><strong>Cavit Pinot Grigio</strong> — Italy ~$10</li>
+      </ul>
+    </div>
+    <div class="tcard">
+      <div class="trange">$14–18</div>
+      <div class="tlabel">Quality Sweet Spot</div>
+      <p class="tdesc">Where most serious buying decisions should land. Better vineyard sourcing, lower yields, more careful winemaking. Regional character becomes pronounced. This is the guide's primary recommendation zone.</p>
+      <ul class="tex">
+        <li><strong>Alois Lageder PG</strong> — Alto Adige ~$16</li>
+        <li><strong>Mâcon-Villages</strong> — Burgundy ~$14–16</li>
+        <li><strong>Martín Códax Albariño</strong> — Rías Baixas ~$14</li>
+        <li><strong>Loimer Grüner Veltliner</strong> — Kamptal ~$17</li>
+        <li><strong>Argiolas Vermentino</strong> — Sardegna ~$14</li>
+        <li><strong>Yalumba Viognier</strong> — Eden Valley ~$17</li>
+        <li><strong>Feudi Falanghina</strong> — Campania ~$15</li>
+      </ul>
+    </div>
+    <div class="tcard">
+      <div class="trange">$18–20</div>
+      <div class="tlabel">Appellation Tier</div>
+      <p class="tdesc">Named subregions, terroir expression, producer reputation. You're paying for a specific place to show up in the glass. Worth it for varieties where regional identity is the whole point.</p>
+      <ul class="tex">
+        <li><strong>Trimbach Riesling</strong> — Alsace ~$19</li>
+        <li><strong>Saracco Moscato d'Asti</strong> — Piedmont ~$18</li>
+        <li><strong>Santo Wines Assyrtiko</strong> — Santorini ~$19</li>
+        <li><strong>Pazo Señorans Albariño</strong> — Rías Baixas ~$20</li>
+        <li><strong>William Fèvre Chablis</strong> — Chablis ~$22*</li>
+      </ul>
+      <p style="font-size:11px;color:#4A4840;margin-top:.5rem;">*Slightly over ceiling but essential reference.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ PAIRINGS ════════ -->
+<section class="wrap" id="pairings">
+  <div class="sec-head">
+    <div class="sec-kicker">What Goes With What</div>
+    <h2 class="sec-title">FOOD &amp; SNACK PAIRINGS</h2>
+    <p class="sec-sub">Organized by what you're eating. The logic in three rules: high acid cuts fat; sweetness tames heat; body should match dish richness.</p>
+  </div>
+  <div class="pair-grid">
+    <div class="pcard">
+      <div class="pcat">OYSTERS &amp; RAW BAR</div>
+      <div class="prow"><span class="pwine">Muscadet</span><span class="pwhy">The perfect pairing at $13. Briny, crisp, same coastline energy as the oyster itself.</span></div>
+      <div class="prow"><span class="pwine">Picpoul</span><span class="pwhy">Grown adjacent to oyster beds for a reason. High acid, saline, ideal.</span></div>
+      <div class="prow"><span class="pwine">Albariño</span><span class="pwhy">Ocean salinity and high acid. The other natural choice.</span></div>
+      <div class="prow"><span class="pwine">Assyrtiko</span><span class="pwhy">More structured. Santorini mineral quality extends the pairing.</span></div>
+    </div>
+    <div class="pcard">
+      <div class="pcat">SPICY FOOD</div>
+      <div class="prow"><span class="pwine">Riesling</span><span class="pwhy">The consensus best for spice — high acid and residual sugar both work against heat.</span></div>
+      <div class="prow"><span class="pwine">Moscato</span><span class="pwhy">Sweetness directly counters heat. Surprisingly effective with Thai or Korean.</span></div>
+      <div class="prow"><span class="pwine">Torrontés</span><span class="pwhy">Floral aromatics and dry finish clean the palate between spicy bites.</span></div>
+      <div class="prow"><span class="pwine">Viognier</span><span class="pwhy">Full body handles bold flavors. Excellent with Thai yellow curry.</span></div>
+    </div>
+    <div class="pcard">
+      <div class="pcat">SEAFOOD &amp; FISH</div>
+      <div class="prow"><span class="pwine">Albariño</span><span class="pwhy">Default choice for mussels, clams, shrimp, ceviche, grilled fish.</span></div>
+      <div class="prow"><span class="pwine">Vermentino</span><span class="pwhy">Seafood pasta especially. The briny bitterness works with olive oil dishes.</span></div>
+      <div class="prow"><span class="pwine">Sauvignon Blanc</span><span class="pwhy">Sushi, sashimi, grilled white fish, fish tacos — versatile.</span></div>
+      <div class="prow"><span class="pwine">Unoaked Chardonnay</span><span class="pwhy">Lobster, scallops, crab. Richer seafood matches the body.</span></div>
+    </div>
+    <div class="pcard">
+      <div class="pcat">CHEESE BOARDS</div>
+      <div class="prow"><span class="pwine">Sauvignon Blanc</span><span class="pwhy">Goat cheese above all else. The acid-fat contrast is textbook.</span></div>
+      <div class="prow"><span class="pwine">Unoaked Chardonnay</span><span class="pwhy">Brie, Camembert. Medium body matches medium-soft cheese.</span></div>
+      <div class="prow"><span class="pwine">Riesling (off-dry)</span><span class="pwhy">Blue cheese and aged cheddar. Sweetness handles pungency.</span></div>
+      <div class="prow"><span class="pwine">Muscadet</span><span class="pwhy">Fresh chèvre. Lean and acidic enough not to fight mild cheese.</span></div>
+    </div>
+    <div class="pcard">
+      <div class="pcat">PIZZA &amp; PASTA</div>
+      <div class="prow"><span class="pwine">Falanghina</span><span class="pwhy">Classic Neapolitan match. Medium body and citrus balance tomato acidity.</span></div>
+      <div class="prow"><span class="pwine">Vermentino</span><span class="pwhy">Seafood pasta and pesto. Herb and mineral notes echo the dish.</span></div>
+      <div class="prow"><span class="pwine">Pinot Grigio</span><span class="pwhy">The conventional Italian-restaurant choice. Conventional for a reason.</span></div>
+      <div class="prow"><span class="pwine">Sauvignon Blanc</span><span class="pwhy">Pesto pasta especially. The green herb character mirrors directly.</span></div>
+    </div>
+    <div class="pcard">
+      <div class="pcat">CHARCUTERIE</div>
+      <div class="prow"><span class="pwine">Grüner Veltliner</span><span class="pwhy">The pepper note plays against cured meat's fat and salt.</span></div>
+      <div class="prow"><span class="pwine">Riesling</span><span class="pwhy">Prosciutto and ham especially. Residual sugar against salt.</span></div>
+      <div class="prow"><span class="pwine">Pinot Grigio</span><span class="pwhy">The Italian style is the natural charcuterie companion.</span></div>
+      <div class="prow"><span class="pwine">Albariño</span><span class="pwhy">The saline quality cuts through fat without overpowering.</span></div>
+    </div>
+    <div class="pcard">
+      <div class="pcat">POULTRY &amp; PORK</div>
+      <div class="prow"><span class="pwine">Unoaked Chardonnay</span><span class="pwhy">Roast chicken and pork. Medium body and clean fruit match the richness.</span></div>
+      <div class="prow"><span class="pwine">Riesling</span><span class="pwhy">Duck and pork especially. Acid cuts fat; residual sugar complements glaze.</span></div>
+      <div class="prow"><span class="pwine">Viognier</span><span class="pwhy">Chicken in cream or tarragon. Body and aromatics match rich preparations.</span></div>
+      <div class="prow"><span class="pwine">Sauvignon Blanc</span><span class="pwhy">Herb-roasted chicken. The green herb note mirrors the seasoning.</span></div>
+    </div>
+    <div class="pcard">
+      <div class="pcat">VEGETABLES &amp; SALADS</div>
+      <div class="prow"><span class="pwine">Grüner Veltliner</span><span class="pwhy">Asparagus — the canonical pairing. Also artichokes, which kill most wines.</span></div>
+      <div class="prow"><span class="pwine">Sauvignon Blanc</span><span class="pwhy">Green salads with vinaigrette. The acidity mirrors the dressing.</span></div>
+      <div class="prow"><span class="pwine">Vermentino</span><span class="pwhy">Roasted Mediterranean vegetables with olive oil and herbs.</span></div>
+      <div class="prow"><span class="pwine">Picpoul</span><span class="pwhy">Light crudités and salads. Its crispness refreshes between bites.</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ════════ STORE TIPS ════════ -->
+<section class="wrap" id="store">
+  <div class="sec-head">
+    <div class="sec-kicker">Practical Intelligence</div>
+    <h2 class="sec-title">AT THE STORE</h2>
+    <p class="sec-sub">Eight things that will make every bottle decision faster and more informed.</p>
+  </div>
+  <div class="tips-grid">
+    <div class="tipcard">
+      <div class="tipnum">01</div>
+      <div class="tiptitle">Old World vs. New World Labels</div>
+      <p class="tipbody">European (Old World) wines are labeled by region — Chablis, Muscadet, Rías Baixas, Picpoul de Pinet. Non-European (New World) wines are labeled by grape — Chardonnay, Sauvignon Blanc. Chablis is always Chardonnay. Muscadet is always Melon de Bourgogne. Knowing the Old World regions tells you the grape without the label saying so.</p>
+    </div>
+    <div class="tipcard">
+      <div class="tipnum">02</div>
+      <div class="tiptitle">"Reserve" Means Nothing</div>
+      <p class="tipbody">In most countries — especially the US — "Reserve" on a label is not legally defined. Any producer can use it. It is frequently a marketing term, not a quality designation. Do not pay extra for it unless you know that specific producer's reserve tier actually means something.</p>
+    </div>
+    <div class="tipcard">
+      <div class="tipnum">03</div>
+      <div class="tiptitle">Drink White Wine Young</div>
+      <p class="tipbody">Most white wines under $20 are made to be consumed within 2–4 years of vintage. Check the year on the bottle; more than four years old on a grocery shelf is a yellow flag. Exceptions: Riesling, Chablis, and quality unoaked Chardonnay can age well. For every bottle in this guide, fresh is almost always better.</p>
+    </div>
+    <div class="tipcard">
+      <div class="tipnum">04</div>
+      <div class="tiptitle">The Trocken Trick</div>
+      <p class="tipbody">German Riesling labels encode sweetness. "Trocken" = dry. "Halbtrocken" = off-dry. Kabinett through Auslese indicates picking ripeness and roughly correlates with sweetness. If you want dry German Riesling, look for "trocken" explicitly. Without it, assume some residual sugar.</p>
+    </div>
+    <div class="tipcard">
+      <div class="tipnum">05</div>
+      <div class="tiptitle">Subregion Over Region</div>
+      <p class="tipbody">Specificity is a quality signal. "Marlborough Sauvignon Blanc" is better than "New Zealand SB." "Muscadet-Sèvre et Maine sur lie" is better than "Muscadet." "Alto Adige Pinot Grigio" is better than "Italy Pinot Grigio." More specific labels mean the producer believes the origin matters enough to say so.</p>
+    </div>
+    <div class="tipcard">
+      <div class="tipnum">06</div>
+      <div class="tiptitle">The Score Sticker Shortcut</div>
+      <p class="tipbody">At Total Wine, shelf bottles with Wine Spectator, Wine Advocate, or Vinous stickers of 88+ are a reasonable quality shortcut in unfamiliar territory. Not infallible — critics have palate biases — but a 90-point bottle at $14 is a reliably safe bet. Don't chase 94+ scores until you're past this guide.</p>
+    </div>
+    <div class="tipcard">
+      <div class="tipnum">07</div>
+      <div class="tiptitle">Serve Colder Than You Think</div>
+      <p class="tipbody">Most white wine is served too warm. Light whites (Muscadet, Picpoul, Pinot Grigio) should be 45–50°F — very cold. Full-bodied whites (Viognier, Chardonnay) at 50–55°F. If a wine tastes flat or flabby, chill it further before concluding the bottle is bad. Temperature masks or reveals everything.</p>
+    </div>
+    <div class="tipcard">
+      <div class="tipnum">08</div>
+      <div class="tiptitle">Spotting Unoaked Chardonnay</div>
+      <p class="tipbody">California Chardonnay at a grocery store is almost always oaked. To find unoaked: look for the word "Unoaked" or "Naked" on the label; buy any French wine labeled "Chablis" (always unoaked); buy "Mâcon-Villages" (usually unoaked); or buy New Zealand Chardonnay labeled explicitly unoaked. When in doubt, ask a Total Wine staff member.</p>
+    </div>
+  </div>
+</section>
+
+<footer>White Wine Field Guide &nbsp;·&nbsp; nickcarbone.github.io &nbsp;·&nbsp; Drink Curiously</footer>
+
+<script>
+function jumpTo(id){
+  var el=document.getElementById(id);
+  if(el){
+    el.scrollIntoView({behavior:'smooth',block:'start'});
+    el.style.outline='1px solid #C8A84B';
+    setTimeout(function(){el.style.outline='';},1200);
+  }
+}
+document.querySelectorAll('a[href^="#"]').forEach(function(a){
+  a.addEventListener('click',function(e){
+    e.preventDefault();
+    var t=document.querySelector(this.getAttribute('href'));
+    if(t)t.scrollIntoView({behavior:'smooth'});
+  });
+});
+</script>
+</body>
+</html>
